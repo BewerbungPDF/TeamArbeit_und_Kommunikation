@@ -275,17 +275,31 @@ if(project >= 100){
     card.className = 'card';
     card.innerText = opt.text;
 
-    card.onclick = ()=>{
-     
+    card.onclick = () => {
+  let value = opt.value;
 
-      project += value;
-      if(project < 0) project = 0;
-      if(project > 100) project = 100;
+  // Если игрок нажимает однотипно несколько раз подряд — штраф
+  if(lastChoice === index){
+    repeatCount++;
+  } else {
+    repeatCount = 0;
+  }
+  lastChoice = index;
 
-      updateBar();
-      current++;
-      showScenario();
-    };
+  if(repeatCount >= 3){
+    value -= 10; // однообразие уменьшает очки
+  }
+
+  project += value;
+
+  // Ограничиваем значения
+  if(project < 0) project = 0;
+  if(project > 100) project = 100;
+
+  updateBar();
+  current++;
+  showScenario();
+};
 
     div.appendChild(card);
   });
