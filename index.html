@@ -88,13 +88,16 @@ document.querySelectorAll("section > *:not(#gameSection)").forEach(el => el.styl
   showScenario();
 }
 // сценарии с РЕАЛЬНЫМ влиянием
+let repeatCount = 0; // счетчик одинаковых нажатий
+let lastChoice = null;
+
 const scenarios = [
   {
     text:"Ein Teammitglied liefert Aufgaben oft unvollständig ab.",
     options:[
        {text:"Offenes Feedback geben und gemeinsam Lösungen suchen", value:+15},
-       {text:"Andere machen die Arbeit heimlich nach", value:-15}, // 2 вариант
-      {text:"Die Person ignorieren, Hauptsache das Projekt läuft", value:-10}
+       {text:"Andere machen die Arbeit heimlich nach", value:-15},
+       {text:"Die Person ignorieren, Hauptsache das Projekt läuft", value:-10}
     ]
   },
   {
@@ -102,7 +105,7 @@ const scenarios = [
     options:[
       {text:"Selbst interpretieren und unabhängig weitermachen", value:-10},
       {text:"Warten, bis das Management klärt", value:-15},
-      {text:"Teammeeting einberufen und klare Ziele gemeinsam festlegen", value:+20} // 3 вариант
+      {text:"Teammeeting einberufen und klare Ziele gemeinsam festlegen", value:+20}
     ]
   },
   {
@@ -110,13 +113,13 @@ const scenarios = [
     options:[
       {text:"Die lautere Meinung übernehmen", value:-10},
       {text:"Konflikt ignorieren und jeder arbeitet alleine weiter", value:-20},
-      {text:"Moderieren, Kompromiss finden und Entscheidung dokumentieren", value:+20} // 3 вариант
+      {text:"Moderieren, Kompromiss finden und Entscheidung dokumentieren", value:+20}
     ]
   },
   {
     text:"Wichtige Informationen wurden versehentlich nicht geteilt.",
     options:[
-      {text:"Fehler offen kommunizieren und Lösungen abstimmen", value:+20}, // 1 вариант
+      {text:"Fehler offen kommunizieren und Lösungen abstimmen", value:+20},
       {text:"Schuld auf andere schieben", value:-15},
       {text:"Vertuschen, um Unruhe zu vermeiden", value:-20}
     ]
@@ -125,14 +128,14 @@ const scenarios = [
     text:"Ein Kollege zeigt keine Initiative bei Aufgaben.",
     options:[
       {text:"Aufgaben eigenständig übernehmen", value:-15},
-      {text:"Ignorieren, Hauptsache Arbeit wird erledigt", value:-10}, // 2 вариант
+      {text:"Ignorieren, Hauptsache Arbeit wird erledigt", value:-10},
       {text:"Motivation fördern durch Anerkennung und passende Aufgaben", value:+15}
     ]
   },
   {
     text:"Die Deadline rückt näher, Stress steigt.",
     options:[
-      {text:"Arbeit koordinieren, Prioritäten setzen, abgleichen", value:+20}, // 1 вариант
+      {text:"Arbeit koordinieren, Prioritäten setzen, abgleichen", value:+20},
       {text:"Schnell alles alleine erledigen", value:-20},
       {text:"Verantwortung auf Einzelne abwälzen", value:-15}
     ]
@@ -142,14 +145,14 @@ const scenarios = [
     options:[
       {text:"Konflikt suchen, Schuldzuweisungen machen", value:-15},
       {text:"Zustimmen, um Streit zu vermeiden", value:-10},
-      {text:"Höflich ablehnen und gemeinsam eine Lösung finden", value:+15} // 3 вариант
+      {text:"Höflich ablehnen und gemeinsam eine Lösung finden", value:+15}
     ]
   },
   {
     text:"Mehrere Teammitglieder liefern widersprüchliche Informationen.",
     options:[
       {text:"Nur eigene Informationen berücksichtigen", value:-15},
-      {text:"Informationsfluss prüfen und alle auf denselben Stand bringen", value:+15}, // 2 вариант
+      {text:"Informationsfluss prüfen und alle auf denselben Stand bringen", value:+15},
       {text:"Die Widersprüche ignorieren, alles läuft trotzdem", value:-10}
     ]
   },
@@ -157,7 +160,7 @@ const scenarios = [
     text:"Ein Teammitglied bringt wiederholt kleine Fehler.",
     options:[
      {text:"Konstruktiv besprechen und Schulung anbieten", value:+15},
-      {text:"Fehler ignorieren, Zeit sparen", value:-15}, // 2 вариант
+      {text:"Fehler ignorieren, Zeit sparen", value:-15},
       {text:"Arbeit komplett übernehmen, damit alles perfekt ist", value:-10}
     ]
   },
@@ -165,27 +168,61 @@ const scenarios = [
     text:"Diskussionen im Team eskalieren häufig.",
     options:[
       {text:"Abwarten, bis sie sich beruhigen", value:-15},
-        {text:"Streit ignorieren, Hauptsache Projekt läuft", value:-10}, // 2 вариант
-   {text:"Moderieren, Regeln für konstruktive Diskussionen einführen", value:+20}
+      {text:"Streit ignorieren, Hauptsache Projekt läuft", value:-10},
+      {text:"Moderieren, Regeln für konstruktive Diskussionen einführen", value:+20}
     ]
   },
   {
     text:"Ein Kollege weigert sich, Feedback anzunehmen.",
     options:[
       {text:"Feedback erzwingen und Druck machen", value:-15},
-      {text:"Aufgeben und Aufgaben selbst erledigen", value:-10}, // 2 вариант
-     {text:"Situationen beobachten und auf Verbesserungschancen warten", value:+15}
+      {text:"Aufgeben und Aufgaben selbst erledigen", value:-10},
+      {text:"Situationen beobachten und auf Verbesserungschancen warten", value:+15}
     ]
   },
   {
     text:"Neue Anforderungen verändern das Projekt während der Arbeit.",
     options:[
       {text:"Alles ignorieren, ursprünglicher Plan bleibt", value:-15},
-       {text:"Schnell improvisieren, ohne Team zu informieren", value:-10}, // 2 вариант
-     {text:"Anpassungen analysieren und Prioritäten mit Team abstimmen", value:+20}
+      {text:"Schnell improvisieren, ohne Team zu informieren", value:-10},
+      {text:"Anpassungen analysieren und Prioritäten mit Team abstimmen", value:+20}
+    ]
+  },
+  {
+    text:"Ein Teammitglied weigert sich, neue Software zu lernen.",
+    options:[
+      {text:"Schulungen anbieten und Schritt für Schritt einbinden", value:+15},
+      {text:"Ignorieren, Hauptsache die Arbeit läuft", value:-15},
+      {text:"Alles alleine erledigen", value:-10}
+    ]
+  },
+  {
+    text:"Teammitglieder arbeiten stark isoliert voneinander.",
+    options:[
+      {text:"Regelmäßige Sync-Meetings einführen", value:+20},
+      {text:"Jeder macht sein Ding, Hauptsache Deadlines werden eingehalten", value:-15},
+      {text:"Team aufteilen, um Konflikte zu vermeiden", value:-10}
     ]
   }
 ];
+
+// Логика при выборе варианта
+function handleChoice(value, choiceIndex){
+  // проверяем, выбирал ли игрок подряд одно и то же
+  if(lastChoice === choiceIndex){
+    repeatCount++;
+  } else {
+    repeatCount = 0;
+  }
+  lastChoice = choiceIndex;
+
+  // штраф за однотипные нажатия подряд
+  if(repeatCount >= 3){ // если однотипный выбор >=3 раза подряд
+    value -= 5; // немного уменьшаем очки
+  }
+
+  project += value;
+}
 
 let current = 0;
 
