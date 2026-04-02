@@ -243,53 +243,42 @@ function showScenario(){
   gameArea.innerHTML="";
 
   // Проверка конца игры
-  if(project <= 0){
-    gameArea.innerHTML = `<div class="scenario">
-      <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
-      <p style="font-weight:bold; color:red;">Ohne Zusammenarbeit und Kommunikation zerfällt alles – Teamarbeit ist unverzichtbar!</p>
-      <button class="button" onclick="startGame()">Nochmal spielen</button>
-    </div>`;
-    return;
-  }
+ if(project <= 0){
+  // Проект разрушен — проигрыш
+  gameArea.innerHTML = <div class="scenario">
+    <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
+    <p style="font-weight:bold; color:red;">Ohne Zusammenarbeit und Kommunikation zerfällt alles – Teamarbeit ist unverzichtbar!</p>
+    <button class="button" onclick="startGame()">Nochmal spielen</button>
+  </div>;
+  return;
+}
 
-  if(project >= 100){
-    gameArea.innerHTML = `<div class="scenario">
-      <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
-      <p style="font-weight:bold; color:green;">Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht!</p>
-      <button class="button" onclick="startGame()">Nochmal spielen</button>
-    </div>`;
-    return;
-  }
+if(project >= 100){
+  // Отличная командная работа — победа
+  gameArea.innerHTML = <div class="scenario">
+    <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
+    <p style="font-weight:bold; color:green;">Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht!</p>
+    <button class="button" onclick="startGame()">Nochmal spielen</button>
+  </div>;
+  return;
+}
 
-  // Берём текущий сценарий
+  // Берём текущий сценарий из перемешанного массива
   const scenario = shuffledScenarios[current % shuffledScenarios.length];
 
   const div = document.createElement('div');
   div.className = 'scenario';
-  div.innerHTML = `<p>${scenario.text}</p>`;
+  div.innerHTML = <p>${scenario.text}</p>;
 
-  scenario.options.forEach((opt, index) => {
+  scenario.options.forEach((opt,index)=>{
     const card = document.createElement('div');
     card.className = 'card';
     card.innerText = opt.text;
 
-    card.onclick = () => {
-      let value = opt.value;
-
-      // Штраф за однотипные нажатия
-      if(lastChoice === index){
-        repeatCount++;
-      } else {
-        repeatCount = 0;
-      }
-      lastChoice = index;
-
-      if(repeatCount >= 3){
-        value -= 10;
-      }
+    card.onclick = ()=>{
+     
 
       project += value;
-
       if(project < 0) project = 0;
       if(project > 100) project = 100;
 
