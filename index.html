@@ -49,14 +49,14 @@ footer {
 <p>Teams, die effektiv zusammenarbeiten und klar kommunizieren, lösen Aufgaben schneller, vermeiden Konflikte und schaffen eine positive Atmosphäre. Teams ohne Kommunikation riskieren Chaos, Stress und Fehlschläge. <span class="highlight">Gute Kommunikation rettet Projekte!</span></p>
 
 <h2>Willst du es selbst erleben?</h2>
-<p>👉 Möchtest du verstehen, was passiert, wenn es keine Teamarbeit und keine Kommunikation gibt?</p>
+<p> Möchtest du verstehen, was passiert, wenn es keine Teamarbeit und keine Kommunikation gibt?</p>
 
 <button class="button" onclick="startGame()">
-👉 Ja, ich will es ausprobieren!
+ Ja, ich will es ausprobieren!
 </button>
 
 <div id="gameSection" style="display:none;">
-<h2>Projektsimulation: Teamwork Challenge</h2>
+<h2>Projektsimulation: Teamarbeit Challenge</h2>
 <div class="progress-container">
   <div class="progress-bar" id="progressBar">0%</div>
 </div>
@@ -90,51 +90,99 @@ document.querySelectorAll("section > *:not(#gameSection)").forEach(el => el.styl
 // сценарии с РЕАЛЬНЫМ влиянием
 const scenarios = [
   {
-    text:"Team spricht nicht miteinander. Was passiert?",
+    text:"Ein Teammitglied liefert Aufgaben oft unvollständig ab.",
     options:[
-      {text:"Weiterarbeiten ohne Kommunikation", value:-20},
-      {text:"Meeting machen und klären", value:+20},
-      {text:"Jeder macht sein eigenes Ding", value:-15}
+      {text:"Andere machen die Arbeit heimlich nach", value:-15},
+      {text:"Offenes Feedback geben und gemeinsam Lösungen suchen", value:+20}, // 2 вариант
+      {text:"Die Person ignorieren, Hauptsache das Projekt läuft", value:-10}
     ]
   },
   {
-    text:"Ein Teammitglied versteht die Aufgabe nicht.",
+    text:"Die Ziele des Projekts sind mehrdeutig formuliert.",
     options:[
-      {text:"Ignorieren", value:-15},
-      {text:"Erklären und helfen", value:+15},
-      {text:"Selber machen ohne zu sagen", value:-10}
+      {text:"Selbst interpretieren und unabhängig weitermachen", value:-10},
+      {text:"Warten, bis das Management klärt", value:-15},
+      {text:"Teammeeting einberufen und klare Ziele gemeinsam festlegen", value:+20} // 3 вариант
     ]
   },
   {
-    text:"Zwei Mitglieder streiten sich.",
+    text:"Zwei Teammitglieder haben unterschiedliche Ansichten über die Vorgehensweise.",
     options:[
-      {text:"Ignorieren", value:-15},
-      {text:"Konflikt lösen und reden", value:+15},
-      {text:"Partei ergreifen und Streit verstärken", value:-20}
+      {text:"Die lautere Meinung übernehmen", value:-10},
+      {text:"Konflikt ignorieren und jeder arbeitet alleine weiter", value:-20},
+      {text:"Moderieren, Kompromiss finden und Entscheidung dokumentieren", value:+20} // 3 вариант
     ]
   },
   {
-    text:"Wichtige Information fehlt im Team.",
+    text:"Wichtige Informationen wurden versehentlich nicht geteilt.",
     options:[
-      {text:"Nichts sagen", value:-20},
-      {text:"Sofort teilen", value:+20},
-      {text:"Später vielleicht sagen", value:-10}
+      {text:"Fehler offen kommunizieren und Lösungen abstimmen", value:+20}, // 1 вариант
+      {text:"Schuld auf andere schieben", value:-15},
+      {text:"Vertuschen, um Unruhe zu vermeiden", value:-20}
     ]
   },
   {
-    text:"Ein Mitglied arbeitet komplett alleine.",
+    text:"Ein Kollege zeigt keine Initiative bei Aufgaben.",
     options:[
-      {text:"So lassen", value:-15},
-      {text:"Zusammenarbeiten fördern", value:+15},
-      {text:"Ignorieren, solange es funktioniert", value:-10}
+      {text:"Aufgaben eigenständig übernehmen", value:-15},
+      {text:"Motivation fördern durch Anerkennung und passende Aufgaben", value:+15}, // 2 вариант
+      {text:"Ignorieren, Hauptsache Arbeit wird erledigt", value:-10}
     ]
   },
   {
-    text:"Team hat Stress wegen Deadline.",
+    text:"Die Deadline rückt näher, Stress steigt.",
     options:[
-      {text:"Alle koordinieren und planen", value:+20},
-      {text:"Chaos laufen lassen", value:-20},
-      {text:"Jeder macht irgendwas schnell", value:-15}
+      {text:"Arbeit koordinieren, Prioritäten setzen, abgleichen", value:+20}, // 1 вариант
+      {text:"Schnell alles alleine erledigen", value:-20},
+      {text:"Verantwortung auf Einzelne abwälzen", value:-15}
+    ]
+  },
+  {
+    text:"Ein Kollege möchte, dass du Aufgaben übernimmst, die nicht zu dir gehören.",
+    options:[
+      {text:"Konflikt suchen, Schuldzuweisungen machen", value:-15},
+      {text:"Zustimmen, um Streit zu vermeiden", value:-10},
+      {text:"Höflich ablehnen und gemeinsam eine Lösung finden", value:+15} // 3 вариант
+    ]
+  },
+  {
+    text:"Mehrere Teammitglieder liefern widersprüchliche Informationen.",
+    options:[
+      {text:"Nur eigene Informationen berücksichtigen", value:-15},
+      {text:"Informationsfluss prüfen und alle auf denselben Stand bringen", value:+20}, // 2 вариант
+      {text:"Die Widersprüche ignorieren, alles läuft trotzdem", value:-10}
+    ]
+  },
+  {
+    text:"Ein Teammitglied bringt wiederholt kleine Fehler.",
+    options:[
+      {text:"Fehler ignorieren, Zeit sparen", value:-15},
+      {text:"Konstruktiv besprechen und Schulung anbieten", value:+20}, // 2 вариант
+      {text:"Arbeit komplett übernehmen, damit alles perfekt ist", value:-10}
+    ]
+  },
+  {
+    text:"Diskussionen im Team eskalieren häufig.",
+    options:[
+      {text:"Abwarten, bis sie sich beruhigen", value:-15},
+      {text:"Moderieren, Regeln für konstruktive Diskussionen einführen", value:+20}, // 2 вариант
+      {text:"Streit ignorieren, Hauptsache Projekt läuft", value:-10}
+    ]
+  },
+  {
+    text:"Ein Kollege weigert sich, Feedback anzunehmen.",
+    options:[
+      {text:"Feedback erzwingen und Druck machen", value:-15},
+      {text:"Situationen beobachten und auf Verbesserungschancen warten", value:+15}, // 2 вариант
+      {text:"Aufgeben und Aufgaben selbst erledigen", value:-10}
+    ]
+  },
+  {
+    text:"Neue Anforderungen verändern das Projekt während der Arbeit.",
+    options:[
+      {text:"Alles ignorieren, ursprünglicher Plan bleibt", value:-15},
+      {text:"Anpassungen analysieren und Prioritäten mit Team abstimmen", value:+20}, // 2 вариант
+      {text:"Schnell improvisieren, ohne Team zu informieren", value:-10}
     ]
   }
 ];
