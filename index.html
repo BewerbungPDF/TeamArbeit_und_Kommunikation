@@ -258,23 +258,25 @@ function showScenario(){
   gameArea.innerHTML="";
 
   // Проверка конца игры
-  if(project <= 0){
-    gameArea.innerHTML = `<div class="scenario">
-      <p>🎉 Super! Dein Team hat gut zusammengearbeitet!</p>
-      <p style="font-weight:bold; color:green;">Wenn das Team zusammenarbeitet, läuft alles reibungslos – Teamwork bringt Erfolg!</p>
-      <button class="button" onclick="startGame()">Nochmal spielen</button>
-    </div>`;
-    return;
-  }
+ if(project <= 0){
+  // Проект разрушен — проигрыш
+  gameArea.innerHTML = `<div class="scenario">
+    <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
+    <p style="font-weight:bold; color:red;">Ohne Zusammenarbeit und Kommunikation zerfällt alles – Teamarbeit ist unverzichtbar!</p>
+    <button class="button" onclick="startGame()">Nochmal spielen</button>
+  </div>`;
+  return;
+}
 
-  if(project >= 100){
-    gameArea.innerHTML = `<div class="scenario">
-      <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
-      <p style="font-weight:bold; color:red;">Wenn man immer nur den gleichen Ansatz wählt, führt das zu Chaos – Teamarbeit ist nötig!</p>
-      <button class="button" onclick="startGame()">Nochmal spielen</button>
-    </div>`;
-    return;
-  }
+if(project >= 100){
+  // Отличная командная работа — победа
+  gameArea.innerHTML = `<div class="scenario">
+    <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
+    <p style="font-weight:bold; color:green;">Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht!</p>
+    <button class="button" onclick="startGame()">Nochmal spielen</button>
+  </div>`;
+  return;
+}
 
   // Берём текущий сценарий из перемешанного массива
   const scenario = shuffledScenarios[current % shuffledScenarios.length];
