@@ -217,60 +217,57 @@ function handleChoice(value, choiceIndex){
   lastChoice = choiceIndex;
 
   // штраф за однотипные нажатия подряд
-  if(repeatCount >= 3){ // если однотипный выбор >=3 раза подряд
-    value -= 30; // немного уменьшаем очки
+  if(repeatCount >= 3){ 
+    value -= 10; // уменьшаем очки
   }
 
   project += value;
 }
 
-let current = 0;
-
 function showScenario(){
   const gameArea = document.getElementById('gameArea');
   gameArea.innerHTML = "";
 
-  // если проект умер
+  // если проект достиг максимума — проект рушится (нет команды)
+  if(project >= 100){
+    gameArea.innerHTML = `
+      <div class="scenario">
+        <p>💥 Projekt gescheitert!</p>
+        <p style="font-weight:bold; color:red; font-size:18px;">
+          Ohne gute Zusammenarbeit zerfällt alles. Teamarbeit ist entscheidend!
+        </p>
+        <button class="button" onclick="startGame()">Neustart</button>
+      </div>`;
+    return;
+  }
+
+  // если проект упал ниже 0 — команда победила
   if(project <= 0){
     gameArea.innerHTML = `
       <div class="scenario">
-  <p>💥 Dein Teamprojekt ist gescheitert!</p>
-  <p style="font-weight:bold; color:red; font-size:18px;">
-  Ohne Zusammenarbeit und Kommunikation passiert… nichts! Alles zerfällt und niemand erreicht die Ziele.  
-  Teamarbeit ist unverzichtbar, um Projekte erfolgreich zu machen.
-  </p>
-  <button class="button" onclick="startGame()">Neustart</button>
-</div>`;
+        <p>🎉 Super! Dein Team hat effektiv zusammengearbeitet!</p>
+        <p style="font-weight:bold; color:green; font-size:18px;">
+          Kommunikation und Kooperation führen zum Erfolg.
+        </p>
+        <button class="button" onclick="startGame()">Nochmal spielen</button>
+      </div>`;
     return;
   }
 
-  // если проект идеален
-  if(project >= 100){
-    gameArea.innerHTML = `
-     <div class="scenario">
-  <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
-  <p style="font-weight:bold; color:green; font-size:18px;">
-  Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht.  
-  So funktioniert effektive Teamarbeit in der Realität!
-  </p>
-  <button class="button" onclick="startGame()">Nochmal spielen</button>
-</div>`;
-    return;
-  }
-
+  // показываем следующий сценарий
   const scenario = scenarios[current % scenarios.length];
 
   const div = document.createElement('div');
   div.className = 'scenario';
   div.innerHTML = `<p>${scenario.text}</p>`;
 
-  scenario.options.forEach(opt=>{
+  scenario.options.forEach((opt, index)=>{
     const card = document.createElement('div');
     card.className = 'card';
     card.innerText = opt.text;
 
     card.onclick = ()=>{
-      project += opt.value;
+      handleChoice(opt.value, index);
       updateBar();
       current++;
       showScenario();
