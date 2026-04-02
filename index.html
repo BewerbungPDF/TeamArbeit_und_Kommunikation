@@ -208,21 +208,6 @@ const scenarios = [
 
 // Логика при выборе варианта
 function handleChoice(value, choiceIndex){
-  // проверяем, выбирал ли игрок подряд одно и то же
-  if(lastChoice === choiceIndex){
-    repeatCount++;
-  } else {
-    repeatCount = 0;
-  }
-  lastChoice = choiceIndex;
-
-  // штраф за однотипные нажатия подряд
-  if(repeatCount >= 3){ 
-    value -= 10; // уменьшаем очки
-  }
-
-  project += value;
-}
 
 // Перемешивание массива
 function shuffle(array){
@@ -261,8 +246,8 @@ function showScenario(){
  if(project <= 0){
   // Проект разрушен — проигрыш
   gameArea.innerHTML = `<div class="scenario">
-    <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
-    <p style="font-weight:bold; color:green;">Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht!</p>
+    <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
+    <p style="font-weight:bold; color:red;">Ohne Zusammenarbeit und Kommunikation zerfällt alles – Teamarbeit ist unverzichtbar!</p>
     <button class="button" onclick="startGame()">Nochmal spielen</button>
   </div>`;
   return;
@@ -271,8 +256,8 @@ function showScenario(){
 if(project >= 100){
   // Отличная командная работа — победа
   gameArea.innerHTML = `<div class="scenario">
-    <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
-    <p style="font-weight:bold; color:red;">Ohne Zusammenarbeit und Kommunikation zerfällt alles – Teamarbeit ist unverzichtbar!</p>
+    <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
+    <p style="font-weight:bold; color:green;">Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht!</p>
     <button class="button" onclick="startGame()">Nochmal spielen</button>
   </div>`;
   return;
@@ -291,18 +276,7 @@ if(project >= 100){
     card.innerText = opt.text;
 
     card.onclick = ()=>{
-      // Если игрок слишком часто нажимает один вариант подряд — добавляем штраф
-      if(lastChoice === index){
-        repeatCount++;
-      } else {
-        repeatCount = 0;
-      }
-      lastChoice = index;
-
-      let value = opt.value;
-      if(repeatCount >= 3){
-        value += 25; // однообразие разрушает проект
-      }
+     
 
       project += value;
       if(project < 0) project = 0;
