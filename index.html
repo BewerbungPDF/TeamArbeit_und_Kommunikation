@@ -113,7 +113,7 @@ const scenarios = [
     options:[
       {text:"Die lautere Meinung übernehmen", value:-10},
       {text:"Konflikt ignorieren und jeder arbeitet alleine weiter", value:-20},
-      {text:"Moderieren, Kompromiss finden und Entscheidung dokumentieren", value:+20}
+      {text:"Moderieren, Kompromiss finden und Entscheidung dokumentieren", value:+10}
     ]
   },
   {
@@ -218,7 +218,7 @@ function handleChoice(value, choiceIndex){
 
   // штраф за однотипные нажатия подряд
   if(repeatCount >= 3){ // если однотипный выбор >=3 раза подряд
-    value -= 25; // немного уменьшаем очки
+    value -= 30; // немного уменьшаем очки
   }
 
   project += value;
