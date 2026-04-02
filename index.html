@@ -234,12 +234,12 @@ function showScenario(){
   if(project <= 0){
     gameArea.innerHTML = `
       <div class="scenario">
-  <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
-  <p style="font-weight:bold; color:green; font-size:18px;">
-  Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht.  
-  So funktioniert effektive Teamarbeit in der Realität!
+  <p>💥 Dein Teamprojekt ist gescheitert!</p>
+  <p style="font-weight:bold; color:red; font-size:18px;">
+  Ohne Zusammenarbeit und Kommunikation passiert… nichts! Alles zerfällt und niemand erreicht die Ziele.  
+  Teamarbeit ist unverzichtbar, um Projekte erfolgreich zu machen.
   </p>
-  <button class="button" onclick="startGame()">Nochmal spielen</button>
+  <button class="button" onclick="startGame()">Neustart</button>
 </div>`;
     return;
   }
@@ -248,12 +248,12 @@ function showScenario(){
   if(project >= 100){
     gameArea.innerHTML = `
      <div class="scenario">
-  <p>💥 Dein Teamprojekt ist gescheitert!</p>
-  <p style="font-weight:bold; color:red; font-size:18px;">
-  Ohne Zusammenarbeit und Kommunikation passiert… nichts! Alles zerfällt und niemand erreicht die Ziele.  
-  Teamarbeit ist unverzichtbar, um Projekte erfolgreich zu machen.
+  <p>🎉 Glückwunsch! Dein Team hat erfolgreich zusammengearbeitet!</p>
+  <p style="font-weight:bold; color:green; font-size:18px;">
+  Durch gute Kommunikation und Zusammenarbeit hat das Team alle Ziele erreicht.  
+  So funktioniert effektive Teamarbeit in der Realität!
   </p>
-  <button class="button" onclick="startGame()">Neustart</button>
+  <button class="button" onclick="startGame()">Nochmal spielen</button>
 </div>`;
     return;
   }
