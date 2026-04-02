@@ -224,50 +224,88 @@ function handleChoice(value, choiceIndex){
   project += value;
 }
 
+// Перемешивание массива
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+  return array;
+}
+
+let current = 0;
+let shuffledScenarios = [];
+
+function startGame(){
+  document.querySelector("header").style.display="none";
+  document.querySelectorAll("section").forEach(el=>el.style.display="none");
+  document.getElementById('gameSection').style.display='block';
+
+  project = 50;
+  current = 0;
+  repeatCount = 0;
+  lastChoice = null;
+
+  // Перемешиваем сценарии
+  shuffledScenarios = shuffle([...scenarios]);
+
+  updateBar();
+  showScenario();
+}
+
 function showScenario(){
   const gameArea = document.getElementById('gameArea');
-  gameArea.innerHTML = "";
+  gameArea.innerHTML="";
 
-  // если проект достиг максимума — проект рушится (нет команды)
-  if(project >= 100){
-    gameArea.innerHTML = `
-      <div class="scenario">
-        <p>💥 Projekt gescheitert!</p>
-        <p style="font-weight:bold; color:red; font-size:18px;">
-          Ohne gute Zusammenarbeit zerfällt alles. Teamarbeit ist entscheidend!
-        </p>
-        <button class="button" onclick="startGame()">Neustart</button>
-      </div>`;
-    return;
-  }
-
-  // если проект упал ниже 0 — команда победила
+  // Проверка конца игры
   if(project <= 0){
-    gameArea.innerHTML = `
-      <div class="scenario">
-        <p>🎉 Super! Dein Team hat effektiv zusammengearbeitet!</p>
-        <p style="font-weight:bold; color:green; font-size:18px;">
-          Kommunikation und Kooperation führen zum Erfolg.
-        </p>
-        <button class="button" onclick="startGame()">Nochmal spielen</button>
-      </div>`;
+    gameArea.innerHTML = `<div class="scenario">
+      <p>🎉 Super! Dein Team hat gut zusammengearbeitet!</p>
+      <p style="font-weight:bold; color:green;">Wenn das Team zusammenarbeitet, läuft alles reibungslos – Teamwork bringt Erfolg!</p>
+      <button class="button" onclick="startGame()">Nochmal spielen</button>
+    </div>`;
     return;
   }
 
-  // показываем следующий сценарий
-  const scenario = scenarios[current % scenarios.length];
+  if(project >= 100){
+    gameArea.innerHTML = `<div class="scenario">
+      <p>💥 Achtung! Dein Projekt ist gescheitert!</p>
+      <p style="font-weight:bold; color:red;">Wenn man immer nur den gleichen Ansatz wählt, führt das zu Chaos – Teamarbeit ist nötig!</p>
+      <button class="button" onclick="startGame()">Nochmal spielen</button>
+    </div>`;
+    return;
+  }
+
+  // Берём текущий сценарий из перемешанного массива
+  const scenario = shuffledScenarios[current % shuffledScenarios.length];
 
   const div = document.createElement('div');
   div.className = 'scenario';
   div.innerHTML = `<p>${scenario.text}</p>`;
 
-  scenario.options.forEach((opt, index)=>{
+  scenario.options.forEach((opt,index)=>{
     const card = document.createElement('div');
     card.className = 'card';
     card.innerText = opt.text;
 
     card.onclick = ()=>{
-      handleChoice(opt.value, index);
+      // Если игрок слишком часто нажимает один вариант подряд — добавляем штраф
+      if(lastChoice === index){
+        repeatCount++;
+      } else {
+        repeatCount = 0;
+      }
+      lastChoice = index;
+
+      let value = opt.value;
+      if(repeatCount >= 3){
+        value += 25; // однообразие разрушает проект
+      }
+
+      project += value;
+      if(project < 0) project = 0;
+      if(project > 100) project = 100;
+
       updateBar();
       current++;
       showScenario();
@@ -278,7 +316,6 @@ function showScenario(){
 
   gameArea.appendChild(div);
 }
-
 function updateBar(){
   const bar = document.getElementById('progressBar');
 
